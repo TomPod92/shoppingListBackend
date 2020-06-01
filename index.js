@@ -81,5 +81,37 @@ app.get('/users/:user_id', async (req, res) => {
     }
 });
 //-------------------------------------------------------
+// GET /products
+// Pobierz wszystkie produkty
+// private
+app.get('/products', async(req, res) => {
+    try {
+        const products = await Product.find({});
+        res.send(products);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error);
+    }
+});
+//-------------------------------------------------------
+// GET /products/:product_id
+// Pobierz produkt o danym ID
+// private
+app.get('/products/:product_id', async (req, res) => {
+    const product_id = req.params.product_id;
+    try {
+        const product = await Product.findById(product_id);
+
+        if(!product) {
+            res.status(404).send();
+        }
+
+        res.send(product)
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error);
+    }
+});
+//-------------------------------------------------------
 
 app.listen(PORT, () => console.log(`Server for Shopping List started on port ${PORT}`));
