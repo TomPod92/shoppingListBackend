@@ -33,22 +33,7 @@ app.post('/users', async (req, res) => {
     }
 });
 //-------------------------------------------------------
-// POST /products
-// Swtórz produkt
-// private
-app.post('/products', async (req, res) => {
-    const product = new Product(req.body);
-
-    try {
-        await product.save();
-        res.status(201).send(product);
-    } catch (error) {
-        console.error(error);
-        res.status(400).send(error);
-    }
-});
-//-------------------------------------------------------
-// GET post
+// GET /users
 // Pobierz wszystkich użytkowników
 // private
 app.get('/users', async (req, res) => {
@@ -67,6 +52,7 @@ app.get('/users', async (req, res) => {
 // private
 app.get('/users/:user_id', async (req, res) => {
     const user_id = req.params.user_id;
+
     try {
         const user = await User.findById(user_id);
 
@@ -80,6 +66,53 @@ app.get('/users/:user_id', async (req, res) => {
         res.status(500).send(error);
     }
 });
+//-------------------------------------------------------
+// PATCH /users/:user_id
+// Edytuj użytkownika
+// private
+app.patch('/users/:user_id', async (req, res) => {
+    const user_id = req.params.user_id;
+
+    const allowedUpdates = ['name', 'email', 'password'];
+    const updates = Object.keys(req.body);
+    const updatesAreValid = updates.every(current => allowedUpdates.includes(current));
+
+    if(!updatesAreValid) {
+        return res.status(400).send({ error: "Invalid updates" })
+    }
+
+    try {
+        const user = await User.findByIdAndUpdate(user_id, req.body, { new: true, runValidators: true }); 
+        // "new" zwróci zedytowanego użytkownika zamiast tego z przed edycji
+        // "runValifators" sprawi że sprawdzimy to co chcemy zmienić/ustawić
+
+        if(!user) {
+            return res.status(404).send(); // nie znaleziono użytkownika
+        }
+
+        res.send(user);
+    } catch (error) {
+        console.error(error);
+        res.status(400).send(error);
+    }
+});
+//-------------------------------------------------------
+// POST /products
+// Stwórz produkt
+// private
+app.post('/products', async (req, res) => {
+    const product = new Product(req.body);
+
+    try {
+        await product.save();
+        res.status(201).send(product);
+    } catch (error) {
+        console.error(error);
+        res.status(400).send(error);
+    }
+});
+
+
 //-------------------------------------------------------
 // GET /products
 // Pobierz wszystkie produkty
