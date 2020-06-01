@@ -18,6 +18,17 @@ const User = mongoose.model('User', {
             }
         }
     },
+    password: {
+        type: String,
+        trim: true,
+        minlength: 7,
+        required: true,
+        validate(value) {
+            if (value.toLowerCase().includes("password")) {
+                throw new Error('Hasło nie powinno zawierać słowa "password"');
+            }
+        }  
+    },
     age: {
         type: Number,
         default: 0,

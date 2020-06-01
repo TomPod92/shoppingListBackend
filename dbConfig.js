@@ -17,20 +17,20 @@ const connectDB = async () => {
 //----------------------------------------------------------
 
         const me = new User({
-            name: '   Tomek   ',
-            email: '  Podsiadlik.tomek@gmail.com',
+            name: 'Tomek',
+            email: 'podsiadlik.tomek@gmail.com',
+            password: '1234567'
             // age: 28
         });
 
-        const mleko = new Product({
-            name: 'mleko',
-            section: 'nabiał'
-        })
-
+        // const mleko = new Product({
+        //     name: 'mleko',
+        //     section: 'nabiał'
+        // })
         // mleko.save();
 
         try {
-            me.save();
+            // me.save();
         } catch (error) {
             console.log(error)
         }
