@@ -5,6 +5,7 @@ const connectDB = require('./dbConfig.js');
 
 const User = require('./models/User.model');
 const Product = require('./models/Product.model');
+const Section = require('./models/Section.model');
 
 const app = express();
 
@@ -216,5 +217,21 @@ app.delete('/products/:product_id', async (req, res) => {
     }
 });
 //-------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------
+// POST /sections
+// Stwórz sekcje
+// private
+app.post('/sections', async (req, res) => {
+    const section = new Section(req.body);
+
+    try {
+        await section.save();
+        res.status(201).send(section);
+    } catch (error) {
+        console.error(error);
+        res.status(400).send(error)
+    }
+});
 
 app.listen(PORT, () => console.log(`Server for Shopping List started on port ${PORT}`));
