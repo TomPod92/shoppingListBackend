@@ -146,5 +146,33 @@ app.get('/products/:product_id', async (req, res) => {
     }
 });
 //-------------------------------------------------------
+// PATCH /products/:product_id
+// Edytuj produkt
+// private
+app.patch('/products/:product_id', async (req, res) => {
+    const product_id = req.params.product_id;
+    const allowedUpdates = ['section', 'name', 'toBuy', 'shops'];
+    const updates = Object.keys(req.body);
+
+    const updatesAreValid = updates.every(current => allowedUpdates.includes(current));
+
+    if(!updatesAreValid) {
+        return res.status(400).send({ error: "Invalid updates" })
+    }
+
+    try {
+        const product = await Product.findByIdAndUpdate(product_id, req.body, { new: true, runValidators: true });
+
+        if(!product) {
+            return res.status(404).send();
+        }
+
+        res.send(product);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error);
+    }
+});
+//-------------------------------------------------------
 
 app.listen(PORT, () => console.log(`Server for Shopping List started on port ${PORT}`));

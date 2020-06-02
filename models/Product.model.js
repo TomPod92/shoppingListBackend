@@ -9,6 +9,10 @@ const Product = mongoose.model('Product', {
         type: String,
         required: true
     },
+    toBuy: {
+        type: Boolean,
+        default: false
+    },
     shops: {
         type: Array
     }
