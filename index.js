@@ -220,7 +220,7 @@ app.delete('/products/:product_id', async (req, res) => {
 //----------------------------------------------------------------------------------------------------------
 //-------------------------------------------------------
 // POST /sections
-// Stwórz sekcje
+// Stwórz dział
 // private
 app.post('/sections', async (req, res) => {
     const section = new Section(req.body);
@@ -231,6 +231,19 @@ app.post('/sections', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(400).send(error)
+    }
+});
+//-------------------------------------------------------
+// GET /sections
+// Pobierz wszystkie działy
+// private
+app.get('/sections', async (req, res) => {
+    try {
+        const sections = await Section.find({});
+        res.send(sections);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error)
     }
 });
 
