@@ -97,6 +97,28 @@ app.patch('/users/:user_id', async (req, res) => {
     }
 });
 //-------------------------------------------------------
+// DELETE /users/:user_id
+// Usuń użytkownika
+// private
+app.delete('/users/:user_id', async (req, res) => {
+    const user_id = req.params.user_id;
+
+    try {
+        const user = await User.findByIdAndDelete(user_id);
+
+        if(!user) {
+            return res.status(404).send();
+        }
+
+        res.send(user);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error);
+    }
+});
+//-------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------
 // POST /products
 // Stwórz produkt
 // private
@@ -162,6 +184,26 @@ app.patch('/products/:product_id', async (req, res) => {
 
     try {
         const product = await Product.findByIdAndUpdate(product_id, req.body, { new: true, runValidators: true });
+
+        if(!product) {
+            return res.status(404).send();
+        }
+
+        res.send(product);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error);
+    }
+});
+//-------------------------------------------------------
+// DELETE /products/:product_id
+// Usuń produkt
+// private
+app.delete('/products/:product_id', async (req, res) => {
+    const product_id = req.params.product_id;
+
+    try {
+        const product = await Product.findByIdAndDelete(product_id);
 
         if(!product) {
             return res.status(404).send();
