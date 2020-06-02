@@ -99,7 +99,7 @@ app.patch('/users/:user_id', async (req, res) => {
 });
 //-------------------------------------------------------
 // DELETE /users/:user_id
-// Usuń użytkownika
+// Usuń użytkownika o danym ID
 // private
 app.delete('/users/:user_id', async (req, res) => {
     const user_id = req.params.user_id;
@@ -198,7 +198,7 @@ app.patch('/products/:product_id', async (req, res) => {
 });
 //-------------------------------------------------------
 // DELETE /products/:product_id
-// Usuń produkt
+// Usuń produkt o danym ID
 // private
 app.delete('/products/:product_id', async (req, res) => {
     const product_id = req.params.product_id;
@@ -246,5 +246,26 @@ app.get('/sections', async (req, res) => {
         res.status(500).send(error)
     }
 });
+//-------------------------------------------------------
+// DELETE /section/:section_id
+// Usuń dział o danym ID
+// private
+app.delete('/sections/:section_id', async (req, res) => {
+    const section_id = req.params.section_id;
+
+    try {
+        const section = await Section.findByIdAndDelete(section_id);
+
+        if(!section) {
+            return res.status(404).send();
+        }
+
+        res.send(section);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error);
+    }
+});
+//-------------------------------------------------------
 
 app.listen(PORT, () => console.log(`Server for Shopping List started on port ${PORT}`));
