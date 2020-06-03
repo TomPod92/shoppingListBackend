@@ -12,13 +12,13 @@ const app = express();
 // Połączenie z baza danych
 connectDB();
 
+// Middleware
+app.use(express.json({extended: false}));
+
 // rejestracja routerów
 app.use(UsersRouter);
 app.use(ProductsRouter);
 app.use(SectionsRouter);
-
-// Middleware
-app.use(express.json({extended: false}));
 
 const PORT = process.env.PORT || 5000;
 app.get('/', (req, res) => res.send('Shopping List API running...'));

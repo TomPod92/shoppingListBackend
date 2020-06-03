@@ -68,7 +68,13 @@ router.patch('/users/:user_id', async (req, res) => {
     }
 
     try {
-        const user = await User.findByIdAndUpdate(user_id, req.body, { new: true, runValidators: true }); 
+        const user = await User.findById(user_id);
+        updates.forEach(current => user[current] = req.body[current]);
+        await user.save();
+
+        // "findByIdAdnUpdate" omija userSchema i wykonuje operacje od razu na bazie danych, więcej lepiej użyć tego powyżej
+        
+        // const user = await User.findByIdAndUpdate(user_id, req.body, { new: true, runValidators: true }); 
         // "new" zwróci zedytowanego użytkownika zamiast tego z przed edycji
         // "runValifators" sprawi że sprawdzimy to co chcemy zmienić/ustawić
 

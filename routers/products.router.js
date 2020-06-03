@@ -65,7 +65,12 @@ router.patch('/products/:product_id', async (req, res) => {
     }
 
     try {
-        const product = await Product.findByIdAndUpdate(product_id, req.body, { new: true, runValidators: true });
+        const product = await Product.findById(product_id);
+        updates.forEach(current => product[current] = req.body[current]);
+        product.save();
+
+        // "findByIdAdnUpdate" omija productSchema i wykonuje operacje od razu na bazie danych, więcej lepiej użyć tego powyżej
+        // const product = await Product.findByIdAndUpdate(product_id, req.body, { new: true, runValidators: true });
 
         if(!product) {
             return res.status(404).send();
