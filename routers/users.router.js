@@ -15,7 +15,21 @@ router.post('/users', async (req, res) => {
         res.status(201).send(user);
     } catch (error) {
         console.error(error);
-        res.status(400).send(error)
+        res.status(400).send(error);
+    }
+});
+//-------------------------------------------------------
+// GET /users
+// Zaloguj użytkownika
+// private
+router.post('/users/login', async (req, res) => {
+    try {
+        const user = await User.findByCredentials(req.body.email, req.body.password); // moja własna metoda
+
+        res.send(user);
+    } catch (error) {
+        console.error(error);
+        res.status(400).send(error);
     }
 });
 //-------------------------------------------------------
@@ -73,7 +87,7 @@ router.patch('/users/:user_id', async (req, res) => {
         await user.save();
 
         // "findByIdAdnUpdate" omija userSchema i wykonuje operacje od razu na bazie danych, więcej lepiej użyć tego powyżej
-        
+
         // const user = await User.findByIdAndUpdate(user_id, req.body, { new: true, runValidators: true }); 
         // "new" zwróci zedytowanego użytkownika zamiast tego z przed edycji
         // "runValifators" sprawi że sprawdzimy to co chcemy zmienić/ustawić

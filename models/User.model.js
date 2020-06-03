@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         trim: true,
         lowercase: true,
+        unique: true,
         required: true,
         validate(value) {
             if(!validator.isEmail(value)) {
@@ -41,10 +42,30 @@ const userSchema = new mongoose.Schema({
     }
 });
 
+userSchema.statics.findByCredentials = async (email, password) => {
+    // znajdz użytkownika
+    const user = await User.findOne({ email });
+    // Sprawdz czy użytkownik o danym adresie email istnieje
+    if(!user) {
+        throw new Error('Brak użytkownika o takim adresie email');
+    }
+
+    // Porównaj podane hasło z za'hash'owanym hasłem z bazy dla użytkownika o danym adresie email
+    const isValid = await bcrypt.compare(password, user.password);
+
+    // Jeżeli hasło jest nieporawne
+    if(!isValid) {
+        throw new Error('Niepoprawne hasło');
+    }
+
+    return user;
+};
+
+// ------------- Hashowanie hasła ---------------
 // odpali ta fukncję przed każdym zapisaniem użytkownika do bazy
 userSchema.pre('save', async function(next) {
     const user = this; // this - to będzie dokument który właśnie zapisujemy
-    
+
     // za każdym razem jak zmieni się hasło (przy tworzeniu użytkownika i update'owaniu hasła)
     if(user.isModified('password')) {
         const salt = bcrypt.genSaltSync(10);
