@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
@@ -41,7 +42,19 @@ const userSchema = new mongoose.Schema({
         }
     }
 });
+//----------------------------------------------------------------------------------
+// Funkcja dostępna na instancji (pojedyńczym user'ze) --> user.generateToken()
+userSchema.methods.generateToken = async function () {
+    const user = this; // this - to będzie dokument z którym właśnie pracujemy
+    const user_id = user._id.toString();
 
+    // Stwórz i podpisz token
+    const token = jwt.sign({ user_id }, process.env.JTW_SECRET, { expiresIn: '5 days' });
+
+    return token
+};
+//----------------------------------------------------------------------------------
+// Funkcja dostępna na modelu --> User.findByCredentials()
 userSchema.statics.findByCredentials = async (email, password) => {
     // znajdz użytkownika
     const user = await User.findOne({ email });
@@ -60,7 +73,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
 
     return user;
 };
-
+//----------------------------------------------------------------------------------
 // ------------- Hashowanie hasła ---------------
 // odpali ta fukncję przed każdym zapisaniem użytkownika do bazy
 userSchema.pre('save', async function(next) {
@@ -74,7 +87,7 @@ userSchema.pre('save', async function(next) {
 
     next();
 });
-
+//----------------------------------------------------------------------------------
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;

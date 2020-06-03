@@ -24,3 +24,15 @@ const PORT = process.env.PORT || 5000;
 app.get('/', (req, res) => res.send('Shopping List API running...'));
 
 app.listen(PORT, () => console.log(`Server for Shopping List started on port ${PORT}`));
+
+const jwt = require('jsonwebtoken');
+
+const MyFunction = () => {
+    const token = jwt.sign({ user_id: 'abcd1234' }, process.env.JTW_SECRET, { expiresIn: '5 days' });
+    console.log(token);
+
+    const tokenIsValid = jwt.verify(token, process.env.JTW_SECRET);
+    console.log(tokenIsValid);
+};
+
+// MyFunction();

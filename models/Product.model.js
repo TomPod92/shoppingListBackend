@@ -13,6 +13,10 @@ const Product = mongoose.model('Product', {
         type: Boolean,
         default: false
     },
+    bought: {
+        type: Boolean,
+        default: false
+    },
     shops: {
         type: Array
     }

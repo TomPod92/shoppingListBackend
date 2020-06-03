@@ -21,12 +21,15 @@ router.post('/users', async (req, res) => {
 //-------------------------------------------------------
 // GET /users
 // Zaloguj użytkownika
-// private
+// public
 router.post('/users/login', async (req, res) => {
     try {
+        // Sprawdz czy użytkownik o danym email'u istnieje i zostało podane dobre hasło
         const user = await User.findByCredentials(req.body.email, req.body.password); // moja własna metoda
 
-        res.send(user);
+        const token = await user.generateToken();
+
+        res.send({ user, token });
     } catch (error) {
         console.error(error);
         res.status(400).send(error);
