@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+// const Product = require('../models/Product.model'); 
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -109,6 +110,16 @@ userSchema.pre('save', async function(next) {
 
     next();
 });
+
+// // Odpali ta funckję za każdym razem jak usuniemy profil użytkownika (inny sposób w user.router)
+// userSchema.pre('remove', async function () {
+//     const user = this;
+//     await Product.deleteMany({
+//         owner: user._id
+//     });
+
+//     next();
+// });
 //----------------------------------------------------------------------------------
 const User = mongoose.model('User', userSchema);
 

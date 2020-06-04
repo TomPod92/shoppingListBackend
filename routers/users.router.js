@@ -1,6 +1,7 @@
 const express = require('express');
 const authMiddleware = require('../middleware/authMiddleware')
 const User = require('../models/User.model');
+const Product = require('../models/Product.model'); // test
 
 const router = new express.Router();
 
@@ -106,6 +107,7 @@ router.delete('/users/me', authMiddleware, async (req, res) => {
     try {
         // const user = await User.findByIdAndDelete(req.user._id); // Inny sposób
         await req.user.remove();
+        await Product.deleteMany({ owner: req.user._id }); // test
 
         res.send(req.user);
     } catch (error) {
