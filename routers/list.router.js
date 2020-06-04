@@ -22,6 +22,22 @@ router.post('/list', authMiddleware, async (req, res) => {
     }
 });
 //-------------------------------------------------------
+// GET /list
+// Pobierz liste zakupów
+// private
+router.get('/list', authMiddleware, async (req, res) => {
+    try {
+        const list = await ListItem.find({
+            owner: req.user._id
+        });
+
+        res.send(list);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error);
+    }
+});
+//-------------------------------------------------------
 // DELETE /list
 // Usuń przedmiot z shopping listy
 // private
