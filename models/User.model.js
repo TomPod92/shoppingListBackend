@@ -32,15 +32,12 @@ const userSchema = new mongoose.Schema({
             }
         }  
     },
-    age: {
-        type: Number,
-        default: 0,
-        validate(value) {
-            if(value < 0) {
-                throw new Error("Age nie moze byc ujemne")
-            }
+    tokens: [{
+        token: {
+            type: String,
+            required: true
         }
-    }
+    }]
 });
 //----------------------------------------------------------------------------------
 // Funkcja dostępna na instancji (pojedyńczym user'ze) --> user.generateToken()
@@ -50,6 +47,12 @@ userSchema.methods.generateToken = async function () {
 
     // Stwórz i podpisz token
     const token = jwt.sign({ user_id }, process.env.JTW_SECRET, { expiresIn: '5 days' });
+
+    // Dodaj stworzony token do tablicy "tokens" danego użytkownika
+    user.tokens = user.tokens.concat({ token });
+
+    // Zapisz zmiany w bazie danych
+    await user.save();
 
     return token
 };
