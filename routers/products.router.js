@@ -38,10 +38,12 @@ router.get('/products', async(req, res) => {
 // GET /products/:product_id
 // Pobierz produkt o danym ID
 // private
-router.get('/products/:product_id', async (req, res) => {
-    const product_id = req.params.product_id;
+router.get('/products/:product_id', authMiddleware, async (req, res) => {
     try {
-        const product = await Product.findById(product_id);
+        const product = await Product.findOne({
+            _id: req.params.product_id,
+            owner: req.user._id
+        });
 
         if(!product) {
             res.status(404).send();
