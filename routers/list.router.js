@@ -22,5 +22,32 @@ router.post('/list', authMiddleware, async (req, res) => {
     }
 });
 //-------------------------------------------------------
+// PATCH /products/:product_id
+// Edytuj produkt
+// private
+router.patch('/list/:listItem_id', authMiddleware, async (req, res) => {
+    const listItem_id = req.params.listItem_id;
+
+    try {
+        const listItem = await ListItem.findOne({
+            _id: listItem_id,
+            owner: req.user._id
+        });
+
+        if(!listItem) {
+            return res.status(404).send();
+        }
+
+        // Zmień "bought" na stan przeciwny i zapisz zmiany w bazie
+        listItem.bought = !listItem.bought;
+        listItem.save();
+
+        res.send(listItem);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error);
+    }
+});
+//-------------------------------------------------------
 
 module.exports = router;
