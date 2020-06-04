@@ -25,10 +25,16 @@ router.post('/products', authMiddleware, async (req, res) => {
 // GET /products
 // Pobierz wszystkie produkty
 // private
-router.get('/products', async(req, res) => {
+router.get('/products', authMiddleware, async(req, res) => {
     try {
-        const products = await Product.find({});
+        const products = await Product.find({
+            owner: req.user._id
+        });
         res.send(products);
+        // ------- Inny sposób -------
+        // await req.user.populate('products').execPopulate();
+        // res.send(req.user.products);
+        // ---------------------------
     } catch (error) {
         console.error(error);
         res.status(500).send(error);
