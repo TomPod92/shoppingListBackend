@@ -69,10 +69,10 @@ router.get('/users/me', authMiddleware, async (req, res) => {
     res.send(req.user)
 });
 //-------------------------------------------------------
-// PATCH /users/:user_id
+// PATCH /users/me
 // Edytuj użytkownika
 // private
-router.patch('/users/:user_id', async (req, res) => {
+router.patch('/users/me', authMiddleware, async (req, res) => {
     const user_id = req.params.user_id;
 
     const allowedUpdates = ['name', 'email', 'password'];
@@ -84,20 +84,15 @@ router.patch('/users/:user_id', async (req, res) => {
     }
 
     try {
-        const user = await User.findById(user_id);
-        updates.forEach(current => user[current] = req.body[current]);
-        await user.save();
+        updates.forEach(current => req.user[current] = req.body[current]);
+        await req.user.save();
 
         // "findByIdAdnUpdate" omija userSchema i wykonuje operacje od razu na bazie danych, więcej lepiej użyć tego powyżej
         // const user = await User.findByIdAndUpdate(user_id, req.body, { new: true, runValidators: true }); 
         // "new" zwróci zedytowanego użytkownika zamiast tego z przed edycji
         // "runValifators" sprawi że sprawdzimy to co chcemy zmienić/ustawić
 
-        if(!user) {
-            return res.status(404).send(); // nie znaleziono użytkownika
-        }
-
-        res.send(user);
+        res.send(req.user);
     } catch (error) {
         console.error(error);
         res.status(400).send(error);
