@@ -11,6 +11,11 @@ const Product = mongoose.model('Product', {
     },
     shops: {
         type: Array
+    },
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'User' // nazwa modelu do którego chcemy stworzyć referencje
     }
 });
 

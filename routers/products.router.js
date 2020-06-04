@@ -1,13 +1,17 @@
 const express = require('express');
 const Product = require('../models/Product.model');
+const authMiddleware = require('../middleware/authMiddleware');
 
 const router = new express.Router();
 
 // POST /products
 // Stwórz produkt
 // private
-router.post('/products', async (req, res) => {
-    const product = new Product(req.body);
+router.post('/products', authMiddleware, async (req, res) => {
+    const product = new Product({
+        ...req.body,
+        owner: req.user._id
+    });
 
     try {
         await product.save();

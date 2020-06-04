@@ -39,6 +39,13 @@ const userSchema = new mongoose.Schema({
         }
     }]
 });
+
+userSchema.virtual('products', { // jako pierwszy argument podajemy nazwę pola które chcemy stworzyć
+    ref: "Product", // nazwa modelu do którego chcemy stworzyć referencje
+    localField: '_id', // nazwa pola na modelu "User", które jest odzwierciedlone na modelu "Product" w polu "owner"
+    foreignField: 'owner' // nazwa pola na ref'ie (tutaj "Product"), które ma odniesienie do modelu "User"
+});
+
 //----------------------------------------------------------------------------------
 // Funkcja dostępna na instancji (pojedyńczym user'ze) --> user.generateToken()
 userSchema.methods.generateToken = async function () {
