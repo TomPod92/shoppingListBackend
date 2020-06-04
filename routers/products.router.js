@@ -102,11 +102,14 @@ router.patch('/products/:product_id', authMiddleware, async (req, res) => {
 // DELETE /products/:product_id
 // Usuń produkt o danym ID
 // private
-router.delete('/products/:product_id', async (req, res) => {
+router.delete('/products/:product_id', authMiddleware, async (req, res) => {
     const product_id = req.params.product_id;
 
     try {
-        const product = await Product.findByIdAndDelete(product_id);
+        const product = await Product.findOneAndDelete({
+            _id: product_id,
+            owner: req.user._id
+        });
 
         if(!product) {
             return res.status(404).send();
