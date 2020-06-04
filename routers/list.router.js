@@ -4,7 +4,7 @@ const authMiddleware = require('../middleware/authMiddleware');
 
 const router = new express.Router();
 
-// POST /products
+// POST /list
 // Dodaj przedmiot do shopping listy
 // private
 router.post('/list', authMiddleware, async (req, res) => {
@@ -22,8 +22,30 @@ router.post('/list', authMiddleware, async (req, res) => {
     }
 });
 //-------------------------------------------------------
-// PATCH /products/:product_id
-// Edytuj produkt
+// DELETE /list
+// Usuń przedmiot z shopping listy
+// private
+router.delete('/list/:listItem_id', authMiddleware, async (req, res) => {
+    const listItem_id = req.params.listItem_id;
+    try {
+        const listItem = await ListItem.findOneAndDelete({
+            _id: listItem_id,
+            owner: req.user._id
+        })
+
+        if(!listItem) {
+            return res.status(404).send();
+        }
+
+        res.send(listItem);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error);
+    }
+});
+//-------------------------------------------------------
+// PATCH /list/:listItem_id
+// Edytuj "bought" przedmiotu z shopping listy
 // private
 router.patch('/list/:listItem_id', authMiddleware, async (req, res) => {
     const listItem_id = req.params.listItem_id;
