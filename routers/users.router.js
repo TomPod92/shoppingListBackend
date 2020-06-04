@@ -1,7 +1,7 @@
 const express = require('express');
 const authMiddleware = require('../middleware/authMiddleware')
 const User = require('../models/User.model');
-const Product = require('../models/Product.model'); // test
+const Product = require('../models/Product.model');
 
 const router = new express.Router();
 
@@ -106,8 +106,8 @@ router.patch('/users/me', authMiddleware, async (req, res) => {
 router.delete('/users/me', authMiddleware, async (req, res) => {
     try {
         // const user = await User.findByIdAndDelete(req.user._id); // Inny sposób
-        await req.user.remove();
-        await Product.deleteMany({ owner: req.user._id }); // test
+        await req.user.remove(); // usuń profil zalogowanego użytkownika
+        await Product.deleteMany({ owner: req.user._id }); // usuń produkty zalogowanego użytkownika (inny sposób w user.model)
 
         res.send(req.user);
     } catch (error) {
