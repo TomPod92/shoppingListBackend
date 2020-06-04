@@ -57,6 +57,18 @@ userSchema.methods.generateToken = async function () {
     return token
 };
 //----------------------------------------------------------------------------------
+// Za każdym razem jak zwrócimy "user" na frontend (czyli zrobimy "res.send(user)") zostanie wywowała ta funkcja
+userSchema.methods.toJSON = function () {
+    const user = this;
+    const userObject = user.toObject();
+
+    // Usuń "password" i "tokens" z obiektu który zwracany jest na frontend
+    delete userObject.password;
+    delete userObject.tokens;
+
+    return userObject;
+};
+//----------------------------------------------------------------------------------
 // Funkcja dostępna na modelu --> User.findByCredentials()
 userSchema.statics.findByCredentials = async (email, password) => {
     // znajdz użytkownika
