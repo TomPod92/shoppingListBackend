@@ -6,7 +6,6 @@ const connectDB = require('./dbConfig.js');
 const UsersRouter = require('./routers/users.router');
 const ProductsRouter = require('./routers/products.router');
 const SectionsRouter = require('./routers/sections.router');
-const ListRouter = require('./routers/list.router');
 
 const app = express();
 
@@ -20,7 +19,6 @@ app.use(express.json({extended: false}));
 app.use(UsersRouter);
 app.use(ProductsRouter);
 app.use(SectionsRouter);
-app.use(ListRouter);
 
 const PORT = process.env.PORT || 5000;
 // app.get('/', (req, res) => res.send('Shopping List API running...'));
