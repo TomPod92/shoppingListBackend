@@ -13,11 +13,6 @@ router.post('/products', authMiddleware, async (req, res) => {
         owner: req.user._id
     });
 
-    const duplicate = await Product.findOne({ name: req.body.name });
-    if(duplicate) {
-        return res.status(400).send('Taki produkt już instnieje');
-    }
-
     try {
         await product.save();
         res.status(201).send(product);
@@ -101,15 +96,14 @@ router.patch('/products/:product_id', authMiddleware, async (req, res) => {
         const product = await Product.findOne({
             _id: product_id,
             owner: req.user._id
-        });;
+        });
 
         if(!product) {
             return res.status(404).send();
         }
 
         updates.forEach(current => product[current] = req.body[current]);
-        product.save();
-
+        await product.save();
         // "findByIdAdnUpdate" omija productSchema i wykonuje operacje od razu na bazie danych, więcej lepiej użyć tego powyżej
         // const product = await Product.findByIdAndUpdate(product_id, req.body, { new: true, runValidators: true });
 
