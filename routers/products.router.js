@@ -137,5 +137,24 @@ router.delete('/products/:product_id', authMiddleware, async (req, res) => {
         res.status(500).send(error);
     }
 });
+//-------------------------------------------------------
+// DELETE /list
+// Usuń kupione produkty z listy zakupów
+// private
+router.delete('/list', authMiddleware, async (req, res) => {
+    const mode = req.body.mode;
+    try {
+        if(mode === 'bought') {
+            await Product.updateMany({ owner: req.user._id, bought: true }, { bought: false, toBuy: false });
+        } else if (mode === 'all') {
+            await Product.updateMany({ owner: req.user._id }, { bought: false, toBuy: false });
+        }
+
+        res.send();
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error);
+    }
+});
 
 module.exports = router;

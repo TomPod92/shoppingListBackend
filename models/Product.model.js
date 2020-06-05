@@ -3,10 +3,12 @@ const mongoose = require('mongoose');
 const Product = mongoose.model('Product', {
     section: {
         type: String,
+        lowercase: true,
         required: true
     },
     name: {
         type: String,
+        lowercase: true,
         required: true
     },
     shops: {
