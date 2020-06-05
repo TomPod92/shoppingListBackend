@@ -13,6 +13,11 @@ router.post('/products', authMiddleware, async (req, res) => {
         owner: req.user._id
     });
 
+    const duplicate = await Product.findOne({ name: req.body.name });
+    if(duplicate) {
+        return res.status(400).send('Taki produkt już instnieje');
+    }
+
     try {
         await product.save();
         res.status(201).send(product);
