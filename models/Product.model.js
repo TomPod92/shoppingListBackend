@@ -16,6 +16,14 @@ const Product = mongoose.model('Product', {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'User' // nazwa modelu do którego chcemy stworzyć referencje
+    },
+    toBuy: {
+        type: Boolean,
+        default: false
+    },
+    bought: {
+        type: Boolean,
+        default: false
     }
 });
 

@@ -41,6 +41,22 @@ router.get('/products', authMiddleware, async(req, res) => {
     }
 });
 //-------------------------------------------------------
+// GET /list
+// Pobierz wszystkie produkty
+// private
+router.get('/list', authMiddleware, async(req, res) => {
+    try {
+        const list = await Product.find({
+            owner: req.user._id,
+            toBuy: true
+        });
+        res.send(list);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error);
+    }
+});
+//-------------------------------------------------------
 // GET /products/:product_id
 // Pobierz produkt o danym ID
 // private
@@ -67,7 +83,7 @@ router.get('/products/:product_id', authMiddleware, async (req, res) => {
 // private
 router.patch('/products/:product_id', authMiddleware, async (req, res) => {
     const product_id = req.params.product_id;
-    const allowedUpdates = ['section', 'name', 'toBuy', 'shops'];
+    const allowedUpdates = ['section', 'name', 'shops', 'toBuy', 'bought'];
     const updates = Object.keys(req.body);
 
     const updatesAreValid = updates.every(current => allowedUpdates.includes(current));
