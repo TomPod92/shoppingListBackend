@@ -18,6 +18,9 @@ router.post('/products', authMiddleware, async (req, res) => {
         res.status(201).send(product);
     } catch (error) {
         console.error(error);
+        if(error.code === 11000) {
+            res.status(400).send("Taki produkt juz istnieje")
+        }
         res.status(400).send(error);
     }
 });
@@ -110,6 +113,9 @@ router.patch('/products/:product_id', authMiddleware, async (req, res) => {
         res.send(product);
     } catch (error) {
         console.error(error);
+        if(error.code === 11000) {
+            res.status(400).send("Taki produkt juz istnieje")
+        }
         res.status(500).send(error);
     }
 });

@@ -14,6 +14,9 @@ router.post('/sections', async (req, res) => {
         res.status(201).send(section);
     } catch (error) {
         console.error(error);
+        if(error.code === 11000) {
+            res.status(400).send("Ten dział został już dodany")
+        }
         res.status(400).send(error)
     }
 });

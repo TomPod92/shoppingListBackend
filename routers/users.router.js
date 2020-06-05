@@ -23,6 +23,9 @@ router.post('/users', async (req, res) => {
         res.status(201).send({ user, token });
     } catch (error) {
         console.error(error);
+        if(error.code === 11000) {
+            res.status(400).send("Ten adres email jest już zajęty")
+        }
         res.status(400).send(error);
     }
 });
@@ -96,6 +99,9 @@ router.patch('/users/me', authMiddleware, async (req, res) => {
         res.send(req.user);
     } catch (error) {
         console.error(error);
+        if(error.code === 11000) {
+            res.status(400).send("Ten adres email jest już zajęty")
+        }
         res.status(400).send(error);
     }
 });
