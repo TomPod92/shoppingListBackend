@@ -41,6 +41,8 @@ const userSchema = new mongoose.Schema({
     }]
 });
 
+// Możemy tego użyć do wyszukania wszystkich produktów danego użtykownika: 
+// -----> await User.findById('...').populate("products").execPopulate()
 userSchema.virtual('products', { // jako pierwszy argument podajemy nazwę pola które chcemy stworzyć
     ref: "Product", // nazwa modelu do którego chcemy stworzyć referencje
     localField: '_id', // nazwa pola na modelu "User", które jest odzwierciedlone na modelu "Product" w polu "owner"
