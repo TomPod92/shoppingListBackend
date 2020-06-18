@@ -5,11 +5,6 @@ const bcrypt = require('bcryptjs');
 // const Product = require('../models/Product.model'); 
 
 const userSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        trim: true,
-        required: true
-    },
     email: {
         type: String,
         trim: true,
