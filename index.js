@@ -1,4 +1,5 @@
 require('dotenv').config();
+const cors = require('cors');
 
 const express = require('express');
 const connectDB = require('./dbConfig.js');
@@ -15,6 +16,7 @@ connectDB();
 
 // Middleware
 app.use(express.json({extended: false}));
+app.use(cors())
 
 // rejestracja routerów
 app.use(UsersRouter);
