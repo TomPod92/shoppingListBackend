@@ -20,7 +20,8 @@ router.post('/users', async (req, res) => {
         // Stwórz jwt token i zapisz go w bazie
         const token = await user.generateToken();
 
-        res.status(201).send({ user, token });
+        // res.status(201).send({ user, token }); // stare --> tablica tokenów
+        res.status(201).send({ user});
     } catch (error) {
         console.error(error);
         if(error.code === 11000) {
@@ -41,7 +42,8 @@ router.post('/users/login', async (req, res) => {
         // Stworz jwt token i zapisz go w bazie
         const token = await user.generateToken();
 
-        res.send({ user, token });
+        res.send({ user });
+        // res.send({ user, token });  // stare --> tablica tokenów
     } catch (error) {
         console.error(error);
         res.status(400).send(error);
@@ -53,8 +55,11 @@ router.post('/users/login', async (req, res) => {
 // private
 router.post('/users/logout', authMiddleware, async (req, res) => {
     try {
+        // Usuń token z "user"
+        req.user.token = '';
+        
         // Usuń dany token z tablicy tokenów zalogowanego użytkownika
-        req.user.tokens = req.user.tokens.filter(current =>  current.token !== req.token);
+        // req.user.tokens = req.user.tokens.filter(current =>  current.token !== req.token); // stare --> tablica tokenów
 
         // Zapisz zmiany w bazie danych
         await req.user.save();

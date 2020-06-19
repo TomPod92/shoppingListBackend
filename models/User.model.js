@@ -28,12 +28,16 @@ const userSchema = new mongoose.Schema({
             }
         }  
     },
-    tokens: [{
-        token: {
-            type: String,
-            required: true
-        }
-    }]
+    token: { // test
+        type: String
+    },
+    // stare --> tablica tokenów
+    // tokens: [{ 
+    //     token: {
+    //         type: String,
+    //         required: true
+    //     }
+    // }]
 });
 
 // Możemy tego użyć do wyszukania wszystkich produktów danego użtykownika: 
@@ -53,8 +57,9 @@ userSchema.methods.generateToken = async function () {
     // Stwórz i podpisz token
     const token = jwt.sign({ user_id }, process.env.JTW_SECRET, { expiresIn: '5 days' });
 
+    user.token = token // test
     // Dodaj stworzony token do tablicy "tokens" danego użytkownika
-    user.tokens = user.tokens.concat({ token });
+    // user.tokens = user.tokens.concat({ token }); // stare --> tablica tokenów
 
     // Zapisz zmiany w bazie danych
     await user.save();
@@ -67,9 +72,10 @@ userSchema.methods.toJSON = function () {
     const user = this;
     const userObject = user.toObject();
 
-    // Usuń "password" i "tokens" z obiektu który zwracany jest na frontend
+    // Usuń "password" z obiektu który jest zwracany na frontend
     delete userObject.password;
-    delete userObject.tokens;
+    // Usuń "password" i "tokens" z obiektu który zwracany jest na frontend
+    // delete userObject.tokens; // stare --> tablica tokenów
 
     return userObject;
 };
