@@ -45,7 +45,7 @@ router.post('/users/login', async (req, res) => {
         // res.send({ user, token });  // stare --> tablica tokenów
     } catch (error) {
         console.error(error);
-        res.status(400).send(error);
+        res.status(400).send("Zły login i/lub hasło");
     }
 });
 //-------------------------------------------------------

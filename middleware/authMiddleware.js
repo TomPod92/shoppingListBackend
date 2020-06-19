@@ -8,7 +8,7 @@ const authMiddleware = async (req, res, next) => {
         const decoded = jwt.verify(token, process.env.JTW_SECRET);
 
         // Znajdz użytkownika o ID z tokena, który w tablicy "tokens" ma dany token
-        const user = await User.findOne({ _id: decoded.user_id, 'tokens.token': token });
+        const user = await User.findOne({ _id: decoded.user_id, 'token': token });
 
         // Jeżeli nie ma takiego użytkownika lub dany użytkownik nie posiada takiego tokena
         if(!user) {
