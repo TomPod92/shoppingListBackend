@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema({
             }
         }  
     },
-    token: { // test
+    token: {
         type: String
     },
     // stare --> tablica tokenów
@@ -55,9 +55,9 @@ userSchema.methods.generateToken = async function () {
     const user_id = user._id.toString();
 
     // Stwórz i podpisz token
-    const token = jwt.sign({ user_id }, process.env.JTW_SECRET, { expiresIn: '5 days' });
+    const token = jwt.sign({ user_id }, process.env.JTW_SECRET, { expiresIn: '999years' });
 
-    user.token = token // test
+    user.token = token
     // Dodaj stworzony token do tablicy "tokens" danego użytkownika
     // user.tokens = user.tokens.concat({ token }); // stare --> tablica tokenów
 

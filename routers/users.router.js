@@ -1,4 +1,6 @@
 const express = require('express');
+const bcrypt = require('bcryptjs');
+
 const authMiddleware = require('../middleware/authMiddleware')
 const User = require('../models/User.model');
 const Product = require('../models/Product.model');
@@ -81,10 +83,26 @@ router.get('/users/me', authMiddleware, async (req, res) => {
 // Edytuj użytkownika
 // private
 router.patch('/users/me', authMiddleware, async (req, res) => {
-    const user_id = req.params.user_id;
+    // const user_id = req.params.user_id;
+    let updates;
 
-    const allowedUpdates = ['name', 'email', 'password'];
-    const updates = Object.keys(req.body);
+    if(req.body.oldPassword) {
+        const isValid = await bcrypt.compare(req.body.oldPassword, req.user.password);
+        console.log(isValid)
+        if(!isValid) {
+            console.log("Przyszlo: ", req.body.oldPassword)
+            console.log('W bazie:', req.user.password)
+            console.log('Nie powinienes zmieniac hasla')
+            return res.status(400).send("Niepoprawny adres email")
+        }
+
+        updates = ["password"];
+    } else {
+        updates = Object.keys(req.body);
+
+    }
+
+    const allowedUpdates = ['email', 'password'];
     const updatesAreValid = updates.every(current => allowedUpdates.includes(current));
 
     if(!updatesAreValid) {
