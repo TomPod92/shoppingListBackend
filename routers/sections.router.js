@@ -1,5 +1,6 @@
 const express = require('express');
 const Section = require('../models/Section.model');
+const Product = require('../models/Product.model');
 const authMiddleware = require('../middleware/authMiddleware');
 
 const router = new express.Router();
@@ -51,6 +52,8 @@ router.delete('/sections/:section_id', authMiddleware, async (req, res) => {
             _id: section_id,
             owner: req.user._id
         });
+
+        await Product.deleteMany({ section: section.name });
 
         if(!section) {
             return res.status(404).send();
