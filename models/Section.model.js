@@ -4,7 +4,6 @@ const Section = mongoose.model('Section', {
     name: {
         type: String,
         trim: true,
-        unique: true,
         lowercase: true,
         required: true
     },

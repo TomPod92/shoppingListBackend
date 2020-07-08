@@ -88,11 +88,8 @@ router.patch('/users/me', authMiddleware, async (req, res) => {
 
     if(req.body.oldPassword) {
         const isValid = await bcrypt.compare(req.body.oldPassword, req.user.password);
-        console.log(isValid)
+        
         if(!isValid) {
-            console.log("Przyszlo: ", req.body.oldPassword)
-            console.log('W bazie:', req.user.password)
-            console.log('Nie powinienes zmieniac hasla')
             return res.status(400).send("Niepoprawny adres email")
         }
 

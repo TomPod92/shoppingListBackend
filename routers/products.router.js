@@ -8,6 +8,15 @@ const router = new express.Router();
 // Stwórz produkt
 // private
 router.post('/products', authMiddleware, async (req, res) => {
+    const duplicate = await Product.find({
+        name: req.body.name,
+        owner: req.user._id
+    });
+
+    if(duplicate.length > 0) {
+        return res.status(400).send("Taki produkt juz istnieje")
+    }
+    
     const product = new Product({
         ...req.body,
         owner: req.user._id
@@ -17,10 +26,7 @@ router.post('/products', authMiddleware, async (req, res) => {
         await product.save();
         res.status(201).send(product);
     } catch (error) {
-        console.error(error);
-        if(error.code === 11000) {
-            res.status(400).send("Taki produkt juz istnieje")
-        }
+        console.error(error); 
         res.status(400).send(error);
     }
 });

@@ -8,6 +8,15 @@ const router = new express.Router();
 // Stwórz sklep
 // private
 router.post('/shops', authMiddleware, async (req, res) => {
+    const duplicate = await Shop.find({
+        name: req.body.name,
+        owner: req.user._id
+    });
+
+    if(duplicate.length > 0) {
+        return res.status(400).send("Ten sklep został już dodany")
+    }
+
     const shop = new Shop({
         ...req.body,
         owner: req.user._id
@@ -18,9 +27,6 @@ router.post('/shops', authMiddleware, async (req, res) => {
         res.status(201).send(shop);
     } catch (error) {
         console.error(error);
-        if(error.code === 11000) {
-            res.status(400).send("Ten sklep został już dodany")
-        }
         res.status(400).send(error)
     }
 });

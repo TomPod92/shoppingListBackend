@@ -9,6 +9,15 @@ const router = new express.Router();
 // Stwórz dział
 // private
 router.post('/sections', authMiddleware, async (req, res) => {
+    const duplicate = await Section.find({
+        name: req.body.name,
+        owner: req.user._id
+    });
+
+    if(duplicate.length > 0) {
+        return res.status(400).send("Ten dział został już dodany")
+    }
+
     const section = new Section({
         ...req.body,
         owner: req.user._id
@@ -19,9 +28,6 @@ router.post('/sections', authMiddleware, async (req, res) => {
         res.status(201).send(section);
     } catch (error) {
         console.error(error);
-        if(error.code === 11000) {
-            res.status(400).send("Ten dział został już dodany")
-        }
         res.status(400).send(error)
     }
 });

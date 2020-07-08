@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const Shop = mongoose.model('Shop', {
     name: {
         type: String,
-        unique: true,
         lowercase: true,
         required: true
     },

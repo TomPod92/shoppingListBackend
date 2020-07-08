@@ -9,7 +9,6 @@ const Product = mongoose.model('Product', {
     name: {
         type: String,
         lowercase: true,
-        unique: true,
         required: true
     },
     shops: {
